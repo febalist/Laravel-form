@@ -8,34 +8,14 @@ use Illuminate\Support\HtmlString;
 use MarvinLabs\Html\Bootstrap\Bootstrap;
 use Spatie\Html\BaseElement;
 
-/**
- * @mixin Bootstrap
- * @method BaseElement textarea($name, $label = '', $value = null, $attributes = [])
- * @method BaseElement text($name, $label = '', $value = null, $attributes = [])
- * @method BaseElement number($name, $label = '', $value = null, $attributes = [])
- * @method BaseElement date($name, $label = '', $value = null, $attributes = [])
- * @method BaseElement time($name, $label = '', $value = null, $attributes = [])
- */
 class Form
 {
-    protected $bs;
+    protected $bootstrap;
     protected $model;
 
-    public function __construct(Bootstrap $bs)
+    public function __construct(Bootstrap $bootstrap)
     {
-        $this->bs = $bs;
-    }
-
-    public function __call($type, $arguments)
-    {
-        $arguments[2] = $this->value($type, $arguments[0], $arguments[2] ?? null);
-
-        $types = ['text', 'number', 'date', 'time', 'textarea', 'file'];
-        if (in_array($type, $types)) {
-            return $this->elementGroup($type, ...$arguments);
-        }
-
-        return $this->bs->$type(...$arguments);
+        $this->bootstrap = $bootstrap;
     }
 
     public function open($options = [])
@@ -55,7 +35,7 @@ class Form
 
         $options['files'] = $options['files'] ?? true;
 
-        return $this->bs->openForm($method, $action, $options);
+        return $this->bootstrap->openForm($method, $action, $options);
     }
 
     public function openModel(Model $model, $store = null, $update = null)
@@ -87,7 +67,7 @@ class Form
 
         $action = str_contains($params[0], '@') ? action(...$params) : route(...$params);
 
-        return $this->bs->openForm($method, $action, [
+        return $this->bootstrap->openForm($method, $action, [
             'model' => $model,
             'files' => true,
         ]);
@@ -97,104 +77,164 @@ class Form
     {
         $this->model = null;
 
-        if ($submit) {
-            $submit = bs()->formGroup(bs()->submit($submit), '')->showAsRow()->toHtml();
-        }
-        $html = $submit.$this->bs->closeForm()->toHtml();
+        $submit = $submit ? $this->submit($submit) : '';
+        $close = $this->bootstrap->closeForm();
 
-        return new HtmlString($html);
+        return $this->html($submit, $close);
     }
 
-    public function select($name, $label = '', $options, $value = null, $attributes = [])
+    public function submit($label, $attributes = [])
     {
-        $value = $this->value('select', $name, $value);
-        $element = $this->bs->select($name, $options, $value)->attributes($attributes);
+        $element = $this->bootstrap->submit($label);
 
-        return $this->group($element, $label);
+        return $this->group($element, $attributes);
     }
 
-    public function file($name, $label = '', $attributes = [])
+    public function hidden($name, $value)
     {
-        $element = $this->bs->file($name)->attributes($attributes);
-
-        return $this->group($element, $label);
+        return $this->bootstrap->hidden($name, $value);
     }
 
-    public function files($name, $label = '', $attributes = [])
+    public function text($name, $label = null, $value = null, $attributes = [])
+    {
+        $element = $this->bootstrap->text($name, $value);
+
+        return $this->group($element, $attributes, $label);
+    }
+
+    public function email($name, $label = null, $value = null, $attributes = [])
+    {
+        $element = $this->bootstrap->email($name, $value);
+
+        return $this->group($element, $attributes, $label);
+    }
+
+    public function password($name, $label = null, $attributes = [])
+    {
+        $element = $this->bootstrap->password($name);
+
+        return $this->group($element, $attributes, $label);
+    }
+
+    public function number($name, $label = null, $value = null, $attributes = [])
+    {
+        $element = $this->bootstrap->input('number', $name, $value);
+
+        return $this->group($element, $attributes, $label);
+    }
+
+    public function integer($name, $label = null, $value = null, $attributes = [])
+    {
+        $attributes['step'] = 1;
+
+        return $this->number($name, $label, $value, $attributes);
+    }
+
+    public function float($name, $label = null, $value = null, $attributes = [])
+    {
+        $attributes['step'] = 0.01;
+
+        return $this->number($name, $label, $value, $attributes);
+    }
+
+    public function date($name, $label = null, $value = null, $attributes = [])
+    {
+        $value = $this->value($name, $value, function ($value) {
+            return Carbon::parse($value)->format('Y-m-d');
+        });
+        $element = $this->bootstrap->input('date', $name, $value);
+
+        return $this->group($element, $attributes, $label);
+    }
+
+    public function time($name, $label = null, $value = null, $attributes = [])
+    {
+        $value = $this->value($name, $value, function ($value) {
+            return Carbon::parse($value)->format('H:i:s');
+        });
+        $element = $this->bootstrap->input('time', $name, $value);
+
+        return $this->group($element, $attributes, $label);
+    }
+
+    public function select($name, $label = null, $options, $value = null, $attributes = [])
+    {
+        $element = $this->bootstrap->select($name, $options, $value);
+
+        return $this->group($element, $attributes, $label);
+    }
+
+//    public function radio($name, $label = null, $value = null, $attributes = [])
+//    {
+//        $element = $this->bootstrap->input('radio', $name, $value);
+//
+//        return $this->group($element, $attributes);
+//    }
+
+    public function checkbox($name, $label = null, $value = null, $attributes = [])
+    {
+        $default = $this->hidden($name, 0);
+        $element = $this->bootstrap->checkBox($name, $label, $value)->value(1);
+        $group = $this->group($element, $attributes);
+
+        return $this->html($default, $group);
+    }
+
+    public function file($name, $label = null, $attributes = [])
+    {
+        $element = $this->bootstrap->file($name);
+
+        return $this->group($element, $attributes, $label);
+    }
+
+    public function files($name, $label = null, $attributes = [])
     {
         $attributes['multiple'] = true;
 
-        return $this->files($name, $label, $attributes);
+        return $this->file($name, $label, $attributes);
     }
 
-    public function image($name, $label = '', $attributes = [])
+    public function image($name, $label = null, $attributes = [])
     {
         $attributes['accept'] = 'image/*';
 
         return $this->file($name, $label, $attributes);
     }
 
-    public function images($name, $label = '', $attributes = [])
+    public function images($name, $label = null, $attributes = [])
     {
         $attributes['accept'] = 'image/*';
 
         return $this->files($name, $label, $attributes);
     }
 
-    public function password($name, $label = '', $attributes = [])
+    protected function group(BaseElement $element, $attributes = [], $label = null)
     {
-        $element = $this->bs->password($name)->attributes($attributes);
+        $help = array_pull($attributes, 'help');
+        $element->attributes($attributes);
 
-        return $this->group($element, $label);
+        return $this->bootstrap->formGroup($element, $label ?: '', $help)->showAsRow();
     }
 
-    protected function dateValue($value)
+    protected function html(...$elements)
     {
-        if ($value) {
-            return Carbon::parse($value)->format('Y-m-d');
+        $html = '';
+
+        foreach ($elements as $element) {
+            $html .= (string) $element;
+        }
+
+        return new HtmlString($html);
+    }
+
+    protected function value($name, $value, callable $transform = null)
+    {
+        $value = $value ?? $this->model->$name ?? null;
+
+        if (isset($value) && $transform) {
+            $value = $transform($value);
         }
 
         return $value;
-    }
-
-    protected function timeValue($value)
-    {
-        if ($value) {
-            return Carbon::parse($value)->format('H:i:s');
-        }
-
-        return $value;
-    }
-
-    /** @return BaseElement */
-    protected function element($type, ...$arguments)
-    {
-        if (method_exists($this->bs, $type)) {
-            return $this->bs->$type(...$arguments);
-        } else {
-            return $this->bs->input($type, ...$arguments);
-        }
-    }
-
-    protected function group(BaseElement $element, $label = '')
-    {
-        $help = $element->getAttribute('help');
-
-        return $this->bs->formGroup($element, $label, $help)->showAsRow();
-    }
-
-    protected function elementGroup($type, $name, $label = '', $value = null, $attributes = [])
-    {
-        $element = $this->element($type, $name, $value)->attributes($attributes);
-
-        return $this->group($element, $label);
-    }
-
-    protected function value($type, $name, $value)
-    {
-        $value = $value ?? $this->model->$name ?? request($name);
-        $method = $type.'Value';
-
-        return method_exists($this, $method) ? $this->$method($value) : $value;
     }
 }
