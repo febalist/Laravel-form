@@ -3,12 +3,20 @@
   "autoload": {
     "psr-4": {
       "Febalist\\LaravelForm\\": "src/"
-    }
+    },
+    "files": [
+      "src/helpers.php"
+    ]
   },
-  "require": {},
+  "require": {
+    "illuminate/support": "5.*",
+    "marvinlabs/laravel-html-bootstrap-4": "0.*"
+  },
   "extra": {
     "laravel": {
-      "providers": []
+      "providers": [
+        "Febalist\\LaravelForm\\ServiceProvider"
+      ]
     }
   }
 }
