@@ -1,0 +1,14 @@
+{
+  "name": "febalist/laravel-form",
+  "autoload": {
+    "psr-4": {
+      "Febalist\\LaravelForm\\": "src/"
+    }
+  },
+  "require": {},
+  "extra": {
+    "laravel": {
+      "providers": []
+    }
+  }
+}
