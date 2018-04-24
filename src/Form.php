@@ -164,13 +164,6 @@ class Form
         return $this->group($element, $attributes, $label);
     }
 
-//    public function radio($name, $label = null, $value = null, $attributes = [])
-//    {
-//        $element = $this->bootstrap->input('radio', $name, $value);
-//
-//        return $this->group($element, $attributes);
-//    }
-
     public function checkbox($name, $label = null, $value = null, $attributes = [])
     {
         $default = $this->hidden($name, 0);
@@ -227,7 +220,7 @@ class Form
         return new HtmlString($html);
     }
 
-    protected function value($name, $value, callable $transform = null)
+    protected function value($name, $value = null, callable $transform = null)
     {
         $value = $value ?? $this->model->$name ?? null;
 
