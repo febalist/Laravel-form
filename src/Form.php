@@ -204,7 +204,14 @@ class Form
     protected function group(BaseElement $element, $attributes = [], $label = null)
     {
         $help = array_pull($attributes, 'help');
+        $prefix = array_pull($attributes, 'prefix');
+        $suffix = array_pull($attributes, 'suffix');
+
         $element->attributes($attributes);
+
+        if ($prefix || $suffix) {
+            $element = $this->bootstrap->inputGroup($element, $prefix, $suffix);
+        }
 
         return $this->bootstrap->formGroup($element, $label ?: '', $help)->showAsRow();
     }
