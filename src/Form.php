@@ -173,16 +173,23 @@ class Form
         return $this->html($default, $group);
     }
 
+    public function radio($name, $label = null, $options, $value = null, $attributes = [])
+    {
+        $element = $this->bootstrap->radioGroup($name, $options, $value);
+
+        return $this->group($element, $attributes, $label);
+    }
+
     public function file($name, $label = null, $attributes = [])
     {
-        $element = $this->bootstrap->file($name);
+        $element = $this->bootstrap->simpleFile($name);
 
         return $this->group($element, $attributes, $label);
     }
 
     public function files($name, $label = null, $attributes = [])
     {
-        $attributes['multiple'] = true;
+        $attributes[] = 'multiple';
 
         return $this->file($name, $label, $attributes);
     }
@@ -207,7 +214,7 @@ class Form
         $prefix = array_pull($attributes, 'prefix');
         $suffix = array_pull($attributes, 'suffix');
 
-        $element->attributes($attributes);
+        $element = $element->attributes($attributes);
 
         if ($prefix || $suffix) {
             $element = $this->bootstrap->inputGroup($element, $prefix, $suffix);
