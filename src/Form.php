@@ -103,6 +103,13 @@ class Form
         return $this->group($element, $attributes, $label);
     }
 
+    public function textarea($name, $label = null, $value = null, $attributes = [])
+    {
+        $element = $this->bootstrap->textArea($name, $value);
+
+        return $this->group($element, $attributes, $label);
+    }
+
     public function email($name, $label = null, $value = null, $attributes = [])
     {
         $element = $this->bootstrap->email($name, $value);
