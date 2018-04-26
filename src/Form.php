@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 use MarvinLabs\Html\Bootstrap\Bootstrap;
 use Spatie\Html\BaseElement;
+use Spatie\Html\Elements\Div;
 
 class Form
 {
@@ -208,16 +209,38 @@ class Form
         return $this->files($name, $label, $attributes);
     }
 
+    public function plain($label = null, $value = null, $attributes = [])
+    {
+        $element = $this->bootstrap->text('', $value)->readOnly(true);
+
+        return $this->group($element, $attributes, $label);
+    }
+
     protected function group(BaseElement $element, $attributes = [], $label = null)
     {
         $help = array_pull($attributes, 'help');
         $prefix = array_pull($attributes, 'prefix');
         $suffix = array_pull($attributes, 'suffix');
+        $datalist = array_pull($attributes, 'datalist');
 
         $element = $element->attributes($attributes);
 
         if ($prefix || $suffix) {
             $element = $this->bootstrap->inputGroup($element, $prefix, $suffix);
+        }
+
+        if ($datalist) {
+            $id = $element->getAttribute('id').'_datalist';
+            $element = $element->attribute('list', $id);
+
+            $html = "<datalist id=\"$id\">";
+            foreach ($datalist as $option) {
+                $option = e($option);
+                $html .= "<option value=\"$option\">";
+            }
+            $html .= '</datalist>';
+
+            $element = Div::create()->html([$element, $html]);
         }
 
         return $this->bootstrap->formGroup($element, $label ?: '', $help)->showAsRow();
