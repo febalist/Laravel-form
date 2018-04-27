@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 use MarvinLabs\Html\Bootstrap\Bootstrap;
+use MarvinLabs\Html\Bootstrap\Elements\ControlWrapper;
 use Spatie\Html\BaseElement;
 use Spatie\Html\Elements\Div;
 
@@ -242,7 +243,11 @@ class Form
         $suffix = array_pull($attributes, 'suffix');
         $datalist = array_pull($attributes, 'datalist');
 
-        $element = $element->attributes($attributes);
+        if ($element instanceof ControlWrapper) {
+            $element = $element->controlAttributes($attributes);
+        } else {
+            $element = $element->attributes($attributes);
+        }
 
         if ($prefix || $suffix) {
             $element = $this->bootstrap->inputGroup($element, $prefix, $suffix);
