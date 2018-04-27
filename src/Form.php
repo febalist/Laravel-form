@@ -223,6 +223,18 @@ class Form
         return $this->group($element, $attributes, $label);
     }
 
+    public function datalist($id, $options)
+    {
+        $html = "<datalist id=\"$id\">";
+        foreach ($options as $option) {
+            $option = e($option);
+            $html .= "<option value=\"$option\">";
+        }
+        $html .= '</datalist>';
+
+        return Div::create()->html($html);
+    }
+
     protected function group(BaseElement $element, $attributes = [], $label = null)
     {
         $help = array_pull($attributes, 'help');
@@ -238,16 +250,10 @@ class Form
 
         if ($datalist) {
             $id = $element->getAttribute('id').'_datalist';
-            $element = $element->attribute('list', $id);
-
-            $html = "<datalist id=\"$id\">";
-            foreach ($datalist as $option) {
-                $option = e($option);
-                $html .= "<option value=\"$option\">";
-            }
-            $html .= '</datalist>';
-
-            $element = Div::create()->html([$element, $html]);
+            $element = Div::create()->html([
+                $element->attribute('list', $id),
+                $this->datalist($id, $datalist),
+            ]);
         }
 
         return $this->bootstrap->formGroup($element, $label ?: '', $help)->showAsRow();
