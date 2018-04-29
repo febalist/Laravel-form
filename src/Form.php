@@ -175,7 +175,7 @@ class Form
 
     public function checkbox($name, $label = null, $value = null, $attributes = [])
     {
-        $default = $this->hidden($name, 0);
+        $default = Div::create()->html("<input type=\"hidden\" name=\"$name\" value=\"0\">");
         $element = $this->bootstrap->checkBox($name, $label, $value)->value(1);
         $group = $this->group($element, $attributes);
 
