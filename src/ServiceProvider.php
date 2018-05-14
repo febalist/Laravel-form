@@ -23,6 +23,7 @@ class ServiceProvider extends IlluminateServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(__DIR__.'/../config/form.php', 'form');
         $this->app->singleton(Form::class, function ($app) {
             return new Form(bs());
         });

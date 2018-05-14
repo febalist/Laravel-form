@@ -191,7 +191,11 @@ class Form
 
     public function file($name, $label = null, $attributes = [])
     {
-        $element = $this->bootstrap->simpleFile($name);
+        if (config('form.file.custom')) {
+            $element = $this->bootstrap->file($name);
+        } else {
+            $element = $this->bootstrap->simpleFile($name);
+        }
 
         return $this->group($element, $attributes, $label);
     }
