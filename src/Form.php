@@ -120,7 +120,7 @@ class Form
 
     public function password($name, $label = null, $attributes = [])
     {
-        $element = $this->bootstrap->password($name, '');
+        $element = $this->bootstrap->password($name)->value('');
 
         return $this->group($element, $attributes, $label);
     }
