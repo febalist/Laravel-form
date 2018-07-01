@@ -203,6 +203,7 @@ class Form
     public function files($name, $label = null, $attributes = [])
     {
         $attributes[] = 'multiple';
+        $name = str_finish($name, '[]');
 
         return $this->file($name, $label, $attributes);
     }
