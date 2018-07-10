@@ -166,7 +166,7 @@ class Form
         return $this->group($element, $attributes, $label);
     }
 
-    public function select($name, $label = null, $options, $value = null, $attributes = [])
+    public function select($name, $label, $options, $value = null, $attributes = [])
     {
         $element = $this->bootstrap->select($name, $options, $value);
 
@@ -182,7 +182,7 @@ class Form
         return $this->html($default, $group);
     }
 
-    public function radio($name, $label = null, $options, $value = null, $attributes = [])
+    public function radio($name, $label, $options, $value = null, $attributes = [])
     {
         $element = $this->bootstrap->radioGroup($name, $options, $value);
 
