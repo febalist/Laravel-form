@@ -210,14 +210,14 @@ class Form
 
     public function image($name, $label = null, $attributes = [])
     {
-        $attributes['accept'] = 'image/*';
+        $attributes['accept'] = $attributes['accept'] ?? 'image/*';
 
         return $this->file($name, $label, $attributes);
     }
 
     public function images($name, $label = null, $attributes = [])
     {
-        $attributes['accept'] = 'image/*';
+        $attributes['accept'] = $attributes['accept'] ?? 'image/*';
 
         return $this->files($name, $label, $attributes);
     }
