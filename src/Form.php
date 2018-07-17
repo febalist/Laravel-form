@@ -134,7 +134,7 @@ class Form
 
     public function integer($name, $label = null, $value = null, $attributes = [])
     {
-        $attributes['step'] = 1;
+        $attributes['step'] = $attributes['step'] ?? 1;
 
         return $this->number($name, $label, $value, $attributes);
     }
