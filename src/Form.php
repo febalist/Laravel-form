@@ -141,7 +141,7 @@ class Form
 
     public function float($name, $label = null, $value = null, $attributes = [])
     {
-        $attributes['step'] = 0.01;
+        $attributes['step'] = $attributes['step'] ?? 0.01;
 
         return $this->number($name, $label, $value, $attributes);
     }
