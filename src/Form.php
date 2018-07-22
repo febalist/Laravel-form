@@ -92,9 +92,9 @@ class Form
         return $this->group($element, $attributes);
     }
 
-    public function hidden($name, $value = null)
+    public function hidden($name, $value = null, $attributes = [])
     {
-        return $this->bootstrap->hidden($name, $value);
+        return $this->bootstrap->hidden($name, $value)->attributes($attributes);
     }
 
     public function text($name, $label = null, $value = null, $attributes = [])
