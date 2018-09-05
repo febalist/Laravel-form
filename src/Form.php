@@ -148,6 +148,7 @@ class Form
 
     public function date($name, $label = null, $value = null, $attributes = [])
     {
+        $attributes['data-date-format'] = 'YYYY-MMMM-DD';
         $value = $this->value($name, $value, function ($value) {
             return Carbon::parse($value)->format('Y-m-d');
         });
