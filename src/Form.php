@@ -230,6 +230,7 @@ class Form
         return $this->group($element, $attributes, $label);
     }
 
+    /** @deprecated  */
     public function datalist($id, $options)
     {
         $html = "<datalist id=\"$id\">";
