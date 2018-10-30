@@ -40,6 +40,12 @@ class Form
         return $this->bootstrap->openForm($method, $action, $options);
     }
 
+    /**
+     * ($model, $store, $update) → route($store), route($update, $model)
+     * ($model $prefix) → route("$prefix.store"), route("$prefix.update", $model)
+     * ($model, [$prefix, $params]) → route("$prefix.store", $params), route("$prefix.update", [$params, $model])
+     * ($model) → route('models.store'), route('models.update', $model)
+     */
     public function openModel(Model $model, $store = null, $update = null)
     {
         $this->model = $model;
@@ -230,7 +236,7 @@ class Form
         return $this->group($element, $attributes, $label);
     }
 
-    /** @deprecated  */
+    /** @deprecated */
     public function datalist($id, $options)
     {
         $html = "<datalist id=\"$id\">";
