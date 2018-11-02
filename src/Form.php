@@ -175,6 +175,13 @@ class Form
 
     public function select($name, $label, $options, $value = null, $attributes = [])
     {
+        $null = array_pull($attributes, 'null');
+
+        if ($null !== null) {
+            $null = $null === true ? '' : $null;
+            $options = array_merge([null => $null], $options);
+        }
+
         $element = $this->bootstrap->select($name, $options, $value);
 
         return $this->group($element, $attributes, $label);
