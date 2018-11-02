@@ -175,12 +175,9 @@ class Form
 
     public function select($name, $label, $options, $value = null, $attributes = [])
     {
-        $null = array_pull($attributes, 'null');
+        $empty = $this->pull_attribute($attributes, 'empty');
 
-        if ($null !== null) {
-            $null = $null === true ? '' : $null;
-            $options = array_merge([null => $null], $options);
-        }
+        $options = select_options($options, $empty !== null, $empty === true ? '' : $empty);
 
         $element = $this->bootstrap->select($name, $options, $value);
 
@@ -301,6 +298,18 @@ class Form
 
         if (isset($value) && $transform) {
             $value = $transform($value);
+        }
+
+        return $value;
+    }
+
+    protected function pull_attribute(&$attributes, $attribute)
+    {
+        $value = array_pull($attributes, $attribute);
+
+        if (in_array($attribute, $attributes)) {
+            $attributes = array_without($attributes, $attribute);
+            $value = true;
         }
 
         return $value;

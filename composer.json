@@ -10,7 +10,8 @@
   },
   "require": {
     "illuminate/support": "5.*",
-    "marvinlabs/laravel-html-bootstrap-4": "1.*"
+    "marvinlabs/laravel-html-bootstrap-4": "1.*",
+    "febalist/laravel-support": "^6.2|^5.21|dev-master"
   },
   "extra": {
     "laravel": {
