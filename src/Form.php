@@ -100,7 +100,9 @@ class Form
 
     public function hidden($name, $value = null, $attributes = [])
     {
-        return $this->bootstrap->hidden($name, $value)->attributes($attributes);
+        $element = $this->bootstrap->hidden($name, $value);
+
+        return $this->bootstrap->formGroup($element)->class('text-center');
     }
 
     public function text($name, $label = null, $value = null, $attributes = [])
