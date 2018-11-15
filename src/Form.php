@@ -68,7 +68,8 @@ class Form
         }
 
         $params = is_array($params) ? $params : [$params];
-        $params[1] = is_array($params[1] ?? []) ? $params[1] : [$params[1]];
+        $params[1] = $params[1] ?? [];
+        $params[1] = is_array($params[1]) ? $params[1] : [$params[1]];
         if ($model->exists) {
             $params[1][] = $model->getRouteKey();
         }
