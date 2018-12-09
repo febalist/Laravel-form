@@ -270,9 +270,6 @@ class Form
 
     public function plain($label = null, $value = null, $attributes = [])
     {
-        $value = $this->value($name, $value);
-        $name = $this->name($name);
-
         $element = $this->bootstrap->text('', $value)->readOnly(true);
 
         return $this->group($element, $attributes, $label);
