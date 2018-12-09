@@ -100,6 +100,9 @@ class Form
 
     public function hidden($name, $value = null, $attributes = [])
     {
+        $value = $this->value($name, $value);
+        $name = $this->name($name);
+
         $element = $this->bootstrap->hidden($name, $value)->attributes($attributes);
 
         return $this->bootstrap->formGroup($element)->class('text-center mb-0');
@@ -107,6 +110,9 @@ class Form
 
     public function text($name, $label = null, $value = null, $attributes = [])
     {
+        $value = $this->value($name, $value);
+        $name = $this->name($name);
+
         $element = $this->bootstrap->text($name, $value);
 
         return $this->group($element, $attributes, $label);
@@ -114,6 +120,9 @@ class Form
 
     public function textarea($name, $label = null, $value = null, $attributes = [])
     {
+        $value = $this->value($name, $value);
+        $name = $this->name($name);
+
         $element = $this->bootstrap->textArea($name, $value);
 
         return $this->group($element, $attributes, $label);
@@ -121,6 +130,9 @@ class Form
 
     public function email($name, $label = null, $value = null, $attributes = [])
     {
+        $value = $this->value($name, $value);
+        $name = $this->name($name);
+
         $element = $this->bootstrap->email($name, $value);
 
         return $this->group($element, $attributes, $label);
@@ -128,6 +140,8 @@ class Form
 
     public function password($name, $label = null, $attributes = [])
     {
+        $name = $this->name($name);
+
         $element = $this->bootstrap->password($name)->value('');
 
         return $this->group($element, $attributes, $label);
@@ -135,6 +149,9 @@ class Form
 
     public function number($name, $label = null, $value = null, $attributes = [])
     {
+        $value = $this->value($name, $value);
+        $name = $this->name($name);
+
         $element = $this->bootstrap->input('number', $name, $value);
 
         return $this->group($element, $attributes, $label);
@@ -156,11 +173,14 @@ class Form
 
     public function date($name, $label = null, $value = null, $attributes = [])
     {
-        $attributes['data-date-format'] = 'YYYY-MMMM-DD';
         $value = $this->value($name, $value, function ($value) {
             return Carbon::parse($value)->format('Y-m-d');
         });
+        $name = $this->name($name);
+
         $element = $this->bootstrap->input('date', $name, $value);
+
+        $attributes['data-date-format'] = 'YYYY-MMMM-DD';
 
         return $this->group($element, $attributes, $label);
     }
@@ -170,6 +190,8 @@ class Form
         $value = $this->value($name, $value, function ($value) {
             return Carbon::parse($value)->format('H:i:s');
         });
+        $name = $this->name($name);
+
         $element = $this->bootstrap->input('time', $name, $value);
 
         return $this->group($element, $attributes, $label);
@@ -177,6 +199,9 @@ class Form
 
     public function select($name, $label, $options, $value = null, $attributes = [])
     {
+        $value = $this->value($name, $value);
+        $name = $this->name($name);
+
         $empty = $this->pull_attribute($attributes, 'empty');
 
         $options = select_options($options, $empty !== null, $empty === true ? '' : $empty);
@@ -188,6 +213,9 @@ class Form
 
     public function checkbox($name, $label = null, $value = null, $attributes = [])
     {
+        $value = $this->value($name, $value);
+        $name = $this->name($name);
+
         $default = Div::create()->html("<input type=\"hidden\" name=\"$name\" value=\"0\">");
         $element = $this->bootstrap->checkBox($name, $label, $value)->value(1);
         $group = $this->group($element, $attributes);
@@ -197,6 +225,9 @@ class Form
 
     public function radio($name, $label, $options, $value = null, $attributes = [])
     {
+        $value = $this->value($name, $value);
+        $name = $this->name($name);
+
         $element = $this->bootstrap->radioGroup($name, $options, $value);
 
         return $this->group($element, $attributes, $label);
@@ -204,6 +235,8 @@ class Form
 
     public function file($name, $label = null, $attributes = [])
     {
+        $name = $this->name($name);
+
         if (config('form.file.custom')) {
             $element = $this->bootstrap->file($name);
         } else {
@@ -237,6 +270,9 @@ class Form
 
     public function plain($label = null, $value = null, $attributes = [])
     {
+        $value = $this->value($name, $value);
+        $name = $this->name($name);
+
         $element = $this->bootstrap->text('', $value)->readOnly(true);
 
         return $this->group($element, $attributes, $label);
@@ -296,7 +332,7 @@ class Form
 
     protected function value($name, $value = null, callable $transform = null)
     {
-        $value = $value ?? $this->model->$name ?? null;
+        $value = old($name) ?? $value ?? data_get($this->model, $name);
 
         if (isset($value) && $transform) {
             $value = $transform($value);
@@ -315,5 +351,18 @@ class Form
         }
 
         return $value;
+    }
+
+    protected function name($name)
+    {
+        $array = explode('.', $name);
+
+        $name = array_shift($array);
+
+        foreach ($array as $item) {
+            $name .= "[$item]";
+        }
+
+        return $name;
     }
 }
