@@ -228,6 +228,10 @@ class Form
         $value = $this->value($name, $value);
         $name = $this->name($name);
 
+        $empty = $this->pull_attribute($attributes, 'empty');
+
+        $options = select_options($options, $empty !== null, $empty === true ? '' : $empty);
+
         $element = $this->bootstrap->radioGroup($name, $options, $value);
 
         return $this->group($element, $attributes, $label);
