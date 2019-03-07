@@ -204,6 +204,7 @@ class Form
 
         $empty = $this->pull_attribute($attributes, 'empty');
 
+        // TODO remove select_options
         $options = select_options($options, $empty !== null, $empty === true ? '' : $empty);
 
         $element = $this->bootstrap->select($name, $options, $value);
@@ -230,6 +231,7 @@ class Form
 
         $empty = $this->pull_attribute($attributes, 'empty');
 
+        // TODO remove select_options
         $options = select_options($options, $empty !== null, $empty === true ? '' : $empty);
 
         $element = $this->bootstrap->radioGroup($name, $options, $value);
