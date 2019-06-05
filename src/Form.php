@@ -33,6 +33,8 @@ class Form
             $action = url()->current();
         }
 
+        $this->model = $options['model'] ?? null;
+
         $method = $options['method'] ?? 'POST';
 
         $options['files'] = $options['files'] ?? true;
@@ -42,7 +44,7 @@ class Form
 
     /**
      * ($model, $store, $update) → route($store), route($update, $model)
-     * ($model $prefix) → route("$prefix.store"), route("$prefix.update", $model)
+     * ($model, $prefix) → route("$prefix.store"), route("$prefix.update", $model)
      * ($model, [$prefix, $params]) → route("$prefix.store", $params), route("$prefix.update", [$params, $model])
      * ($model) → route('models.store'), route('models.update', $model)
      */
