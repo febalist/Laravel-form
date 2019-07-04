@@ -199,23 +199,7 @@ class Form
         return $this->group($element, $attributes, $label);
     }
 
-    /** @deprecated */
     public function select($name, $label, $options, $value = null, $attributes = [])
-    {
-        $value = $this->value($name, $value);
-        $name = $this->name($name);
-
-        $empty = $this->pull_attribute($attributes, 'empty');
-
-        // TODO remove select_options
-        $options = select_options($options, $empty !== null, $empty === true ? '' : $empty);
-
-        $element = $this->bootstrap->select($name, $options, $value);
-
-        return $this->group($element, $attributes, $label);
-    }
-
-    public function select_fixed($name, $label, $options, $value = null, $attributes = [])
     {
         $value = $this->value($name, $value);
         $name = $this->name($name);
@@ -234,7 +218,7 @@ class Form
     {
         $options = array_combine_values($options);
 
-        return $this->select_fixed($options);
+        return $this->select($options);
     }
 
     public function checkbox($name, $label = null, $value = null, $attributes = [])
@@ -306,7 +290,6 @@ class Form
         return $this->group($element, $attributes, $label);
     }
 
-    /** @deprecated */
     public function datalist($id, $options)
     {
         $html = "<datalist id=\"$id\">";
