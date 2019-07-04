@@ -204,6 +204,8 @@ class Form
         $value = $this->value($name, $value);
         $name = $this->name($name);
 
+        $options = array_value($options);
+
         $empty = $this->pull_attribute($attributes, 'empty');
         if ($empty !== null) {
             $options = ['' => $empty === true ? '' : $empty] + $options;
@@ -216,6 +218,7 @@ class Form
 
     public function select_combine($name, $label, $options, $value = null, $attributes = [])
     {
+        $options = array_value($options);
         $options = array_combine_values($options);
 
         return $this->select($options);
