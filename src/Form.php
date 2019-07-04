@@ -199,6 +199,7 @@ class Form
         return $this->group($element, $attributes, $label);
     }
 
+    /** @deprecated */
     public function select($name, $label, $options, $value = null, $attributes = [])
     {
         $value = $this->value($name, $value);
@@ -212,6 +213,28 @@ class Form
         $element = $this->bootstrap->select($name, $options, $value);
 
         return $this->group($element, $attributes, $label);
+    }
+
+    public function select_fixed($name, $label, $options, $value = null, $attributes = [])
+    {
+        $value = $this->value($name, $value);
+        $name = $this->name($name);
+
+        $empty = $this->pull_attribute($attributes, 'empty');
+        if ($empty !== null) {
+            $options = ['' => $empty === true ? '' : $empty] + $options;
+        }
+
+        $element = $this->bootstrap->select($name, $options, $value);
+
+        return $this->group($element, $attributes, $label);
+    }
+
+    public function select_combine($name, $label, $options, $value = null, $attributes = [])
+    {
+        $options = array_combine_values($options);
+
+        return $this->select_fixed($options);
     }
 
     public function checkbox($name, $label = null, $value = null, $attributes = [])
