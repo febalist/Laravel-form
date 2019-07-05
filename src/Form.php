@@ -234,7 +234,7 @@ class Form
     {
         $options = array_combine_values($options);
 
-        return $this->select_fixed($options);
+        return $this->select_fixed($name, $label, $options, $value, $attributes);
     }
 
     public function checkbox($name, $label = null, $value = null, $attributes = [])
