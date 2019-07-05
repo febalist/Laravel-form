@@ -221,7 +221,7 @@ class Form
         $options = array_value($options);
         $options = array_combine_values($options);
 
-        return $this->select($options);
+        return $this->select($name, $label, $options, $value, $attributes);
     }
 
     public function checkbox($name, $label = null, $value = null, $attributes = [])
