@@ -244,7 +244,7 @@ class Form
         $div = Div::create()->addChild('<div class="mt-2"></div>');
         foreach ($options as $key => $title) {
             $default = "<input type=\"hidden\" name=\"{$name}[$key]\" value=\"0\">";
-            $checkbox = $this->bootstrap->checkBox("{$name}[$key]", $title, $value[$key] ?? false)->value(0);
+            $checkbox = $this->bootstrap->checkBox("{$name}[$key]", $title, $value[$key] ?? false)->value(1);
             $div = $div->addChildren($default)->addChildren($checkbox);
         }
 
