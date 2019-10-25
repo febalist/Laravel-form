@@ -264,14 +264,19 @@ class Form
         $value = $this->value($name, $value);
         $name = $this->name($name);
 
-        $empty = $this->pull_attribute($attributes, 'empty');
+        $options = array_value($options);
 
-        // TODO remove select_options
-        $options = select_options($options, $empty !== null, $empty === true ? '' : $empty);
-
-        $element = $this->bootstrap->radioGroup($name, $options, $value);
+        $element = $this->bootstrap->radioGroup($name, $options, $value)->class('mt-2');
 
         return $this->group($element, $attributes, $label);
+    }
+
+    public function radio_combine($name, $label, $options, $value = null, $attributes = [])
+    {
+        $options = array_value($options);
+        $options = array_combine_values($options);
+
+        return $this->radio($name, $label, $options, $value, $attributes);
     }
 
     public function file($name, $label = null, $attributes = [])
