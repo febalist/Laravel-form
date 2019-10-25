@@ -2,6 +2,7 @@
 
 namespace Febalist\LaravelForm;
 
+use Blade;
 use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
 
 class ServiceProvider extends IlluminateServiceProvider
@@ -13,7 +14,11 @@ class ServiceProvider extends IlluminateServiceProvider
      */
     public function boot()
     {
+        $this->publishes([__DIR__.'/../views' => resource_path('views/vendor/form')]);
+        $this->loadViewsFrom(__DIR__.'/../views', 'form');
 
+        Blade::component('form::components.form_group', 'form_group');
+        Blade::component('form::components.form_group_help', 'form_group_help');
     }
 
     /**
