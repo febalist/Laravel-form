@@ -236,6 +236,29 @@ class Form
         return $this->html($default, $group);
     }
 
+    public function checkboxes($name, $label, $options, $value = null, $attributes = [])
+    {
+        $value = $this->value($name, $value);
+        $name = $this->name($name);
+
+        $div = Div::create()->addChild('<div class="mt-2"></div>');
+        foreach ($options as $key => $title) {
+            $default = "<input type=\"hidden\" name=\"{$name}[$key]\" value=\"0\">";
+            $checkbox = $this->bootstrap->checkBox("{$name}[$key]", $title, $value[$key] ?? false)->value(0);
+            $div = $div->addChildren($default)->addChildren($checkbox);
+        }
+
+        return $this->group($div, $attributes, $label);
+    }
+
+    public function checkboxes_combine($name, $label, $options, $value = null, $attributes = [])
+    {
+        $options = array_value($options);
+        $options = array_combine_values($options);
+
+        return $this->checkboxes($name, $label, $options, $value, $attributes);
+    }
+
     public function radio($name, $label, $options, $value = null, $attributes = [])
     {
         $value = $this->value($name, $value);
