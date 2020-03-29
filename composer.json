@@ -9,7 +9,7 @@
     ]
   },
   "require": {
-    "marvinlabs/laravel-html-bootstrap-4": "1.*",
+    "marvinlabs/laravel-html-bootstrap-4": "^1.7",
     "febalist/laravel-support": "^8.0|^7.0|^6.2|^5.21"
   },
   "extra": {
