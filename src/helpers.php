@@ -1,11 +1,10 @@
 <?php
 
+use Febalist\Laravel\Form\Form;
+
 if (!function_exists('form')) {
-    /**
-     * @return Febalist\LaravelForm\Form
-     */
-    function form()
+    function form(): Form
     {
-        return app(Febalist\Laravel\Form\Form::class);
+        return app(Form::class);
     }
 }
