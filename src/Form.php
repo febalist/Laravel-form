@@ -1,10 +1,14 @@
 <?php
 
-namespace Febalist\LaravelForm;
+namespace Febalist\Laravel\Form;
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
 use MarvinLabs\Html\Bootstrap\Bootstrap;
 use MarvinLabs\Html\Bootstrap\Elements\ControlWrapper;
 use Spatie\Html\BaseElement;
@@ -64,13 +68,13 @@ class Form
             } elseif ($store) {
                 $prefix = $store;
             } else {
-                $prefix = str_plural(snake_case(class_basename($model)));
+                $prefix = Str::plural(Str::snake(class_basename($model)));
             }
             $params = $model->exists ? ["$prefix.update", $params] : ["$prefix.store", $params];
         }
 
         $params = is_array($params) ? $params : [$params];
-        $params[1] = array_wrap($params[1] ?? []);
+        $params[1] = Arr::wrap($params[1] ?? []);
         if ($model->exists) {
             $params[1][] = $model->getRouteKey();
         }
@@ -204,7 +208,7 @@ class Form
         $value = $this->value($name, $value);
         $name = $this->name($name);
 
-        $options = array_value($options);
+        $options = $this->array($options);
 
         $empty = $this->pull_attribute($attributes, 'empty');
         if ($empty !== null) {
@@ -218,8 +222,8 @@ class Form
 
     public function select_combine($name, $label, $options, $value = null, $attributes = [])
     {
-        $options = array_value($options);
-        $options = array_combine_values($options);
+        $options = $this->array($options);
+        $options = $this->combine($options);
 
         return $this->select($name, $label, $options, $value, $attributes);
     }
@@ -253,8 +257,8 @@ class Form
 
     public function checkboxes_combine($name, $label, $options, $value = null, $attributes = [])
     {
-        $options = array_value($options);
-        $options = array_combine_values($options);
+        $options = $this->array($options);
+        $options = $this->combine($options);
 
         return $this->checkboxes($name, $label, $options, $value, $attributes);
     }
@@ -264,7 +268,7 @@ class Form
         $value = $this->value($name, $value);
         $name = $this->name($name);
 
-        $options = array_value($options);
+        $options = $this->array($options);
 
         $element = $this->bootstrap->radioGroup($name, $options, $value)->class('mt-2');
 
@@ -273,8 +277,8 @@ class Form
 
     public function radio_combine($name, $label, $options, $value = null, $attributes = [])
     {
-        $options = array_value($options);
-        $options = array_combine_values($options);
+        $options = $this->array($options);
+        $options = $this->combine($options);
 
         return $this->radio($name, $label, $options, $value, $attributes);
     }
@@ -295,7 +299,7 @@ class Form
     public function files($name, $label = null, $attributes = [])
     {
         $attributes[] = 'multiple';
-        $name = str_finish($name, '[]');
+        $name = Str::finish($name, '[]');
 
         return $this->file($name, $label, $attributes);
     }
@@ -335,10 +339,10 @@ class Form
 
     protected function group(BaseElement $element, $attributes = [], $label = null)
     {
-        $help = array_pull($attributes, 'help');
-        $prefix = array_pull($attributes, 'prefix');
-        $suffix = array_pull($attributes, 'suffix');
-        $datalist = array_pull($attributes, 'datalist');
+        $help = Arr::pull($attributes, 'help');
+        $prefix = Arr::pull($attributes, 'prefix');
+        $suffix = Arr::pull($attributes, 'suffix');
+        $datalist = Arr::pull($attributes, 'datalist');
 
         if ($element instanceof ControlWrapper) {
             $element = $element->controlAttributes($attributes);
@@ -385,7 +389,7 @@ class Form
 
     protected function pull_attribute(&$attributes, $attribute)
     {
-        $value = array_pull($attributes, $attribute);
+        $value = Arr::pull($attributes, $attribute);
 
         if (in_array($attribute, $attributes)) {
             $attributes = array_without($attributes, $attribute);
@@ -406,5 +410,26 @@ class Form
         }
 
         return $name;
+    }
+
+    protected function array($value)
+    {
+        if ($value instanceof Collection) {
+            return $value->all();
+        }
+
+        if ($value instanceof Arrayable) {
+            return $value->toArray();
+        }
+
+        return $value;
+    }
+
+    protected function combine(array $array)
+    {
+        $array = array_values($array);
+        $array = array_combine($array, $array);
+
+        return $array;
     }
 }

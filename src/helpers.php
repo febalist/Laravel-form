@@ -6,6 +6,6 @@ if (!function_exists('form')) {
      */
     function form()
     {
-        return app(Febalist\LaravelForm\Form::class);
+        return app(Febalist\Laravel\Form\Form::class);
     }
 }

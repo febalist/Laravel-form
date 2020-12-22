@@ -1,22 +1,21 @@
 {
-  "name": "febalist/laravel-form",
-  "autoload": {
-    "psr-4": {
-      "Febalist\\LaravelForm\\": "src/"
+    "name": "febalist/laravel-form",
+    "autoload": {
+        "psr-4": {
+            "Febalist\\Laravel\\Form\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
-    "files": [
-      "src/helpers.php"
-    ]
-  },
-  "require": {
-    "marvinlabs/laravel-html-bootstrap-4": "^1.7",
-    "febalist/laravel-support": "^8.0|^7.0|^6.2|^5.21"
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "Febalist\\LaravelForm\\ServiceProvider"
-      ]
+    "require": {
+        "marvinlabs/laravel-html-bootstrap-4": "^1.8"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Febalist\\Laravel\\Form\\ServiceProvider"
+            ]
+        }
     }
-  }
 }

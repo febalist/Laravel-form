@@ -1,6 +1,6 @@
 <?php
 
-namespace Febalist\LaravelForm;
+namespace Febalist\Laravel\Form;
 
 use Blade;
 use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
