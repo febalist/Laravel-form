@@ -392,7 +392,7 @@ class Form
         $value = Arr::pull($attributes, $attribute);
 
         if (in_array($attribute, $attributes)) {
-            $attributes = array_without($attributes, $attribute);
+            $attributes = array_diff($attributes, [$attribute]);
             $value = true;
         }
 
